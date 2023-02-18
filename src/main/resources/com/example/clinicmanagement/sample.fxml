@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.clinicmanagement.Controller">
+    <children>
+        <TableView fx:id="tableView" layoutX="255.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="247.0" prefWidth="399.0">
+            <columns>
+<!--                <TableColumn fx:id="indexColumn" prefWidth="75.0" text="No." />-->
+                <TableColumn fx:id="nameColumn" prefWidth="95.0" text="Nama Pasien" />
+                <TableColumn fx:id="nikColumn" prefWidth="94.66668701171875" text="NIK" />
+                <TableColumn fx:id="birthDateColumn" prefWidth="101.33331298828125" text="Tanggal Lahir" />
+                <TableColumn fx:id="addressColumn" minWidth="3.66668701171875" prefWidth="107.66668701171875" text="Alamat" />
+            </columns>
+        </TableView>
+      <HBox alignment="TOP_RIGHT" layoutX="255.0" layoutY="289.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="399.0">
+         <children>
+             <Button mnemonicParsing="false" onAction="#selectPrevious" prefWidth="100.0" text="▲  Previous">
+                 <cursor>
+                     <Cursor fx:constant="HAND" />
+                 </cursor>
+             </Button>
+            <Button layoutX="199.0" onAction="#selectNext" layoutY="10.0" mnemonicParsing="false" prefWidth="100.0" text="▼  Next">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+              <Button mnemonicParsing="false" onAction="#delete" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #dc3545;" text="Delete" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+        <VBox layoutX="25.0" layoutY="26.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="273.0" prefWidth="206.0" spacing="5.0">
+            <children>
+                <Text id="nameLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Nama Pasien" />
+                <TextField id="nameInput" fx:id="nameInput" style="-fx-border-color: transparent;" styleClass="text-field-element" />
+            <Label id="nameAlert" prefHeight="17.0" prefWidth="211.0" textFill="RED">
+               <VBox.margin>
+                  <Insets bottom="-5.0" top="-5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Label>
+                <Text id="nikLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="NIK" />
+                <TextField id="nikInput" fx:id="nikInput" style="-fx-border-color: transparent;" styleClass="text-field-element" />
+            <Label id="nikAlert" layoutX="10.0" layoutY="57.0" prefHeight="17.0" prefWidth="211.0" textFill="RED">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="-5.0" top="-5.0" />
+               </VBox.margin>
+            </Label>
+                <Text id="birthDateLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Tanggal Lahir" />
+                <DatePicker id="birthDateInput" fx:id="birthDateInput" prefHeight="25.0" prefWidth="232.0" style="-fx-border-color: transparent;" styleClass="text-field-element" />
+            <Label id="birthDateAlert" layoutX="10.0" layoutY="120.0" prefHeight="17.0" prefWidth="211.0" textFill="RED">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="-5.0" top="-5.0" />
+               </VBox.margin>
+            </Label>
+                <Text id="addressLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Alamat" />
+                <TextField id="addressInput" fx:id="addressInput" style="-fx-border-color: transparent;" styleClass="text-field-element" />
+            <Label id="addressAlert" layoutX="10.0" layoutY="211.0" prefHeight="17.0" prefWidth="211.0" textFill="RED">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="-5.0" top="-5.0" />
+               </VBox.margin>
+            </Label>
+            <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="206.0">
+               <children>
+                <Button mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #6c757d;" text="Reset" textFill="WHITE" />
+                   <Button mnemonicParsing="false" onAction="#submit" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #007bff;" text="Save" textFill="WHITE">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                       <cursor>
+                           <Cursor fx:constant="HAND" />
+                       </cursor>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                   </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+        </VBox>
+    </children>
+</AnchorPane>
