@@ -1,7 +1,6 @@
 package com.example.clinicmanagement;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -49,17 +49,22 @@ public class Controller implements Initializable {
     @FXML
     private TextField addressInput;
 
+    private Database database;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-        nikColumn.setCellValueFactory(new PropertyValueFactory<User, String>("nik"));
-        birthDateColumn.setCellValueFactory(new PropertyValueFactory<User, LocalDate>("birthDate"));
-        addressColumn.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
+        try {
+            this.database = new Database();
+            ObservableList<User> users = this.database.getAll();
+            if (users != null) tableView.setItems(users);
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+            nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+            nikColumn.setCellValueFactory(new PropertyValueFactory<User, String>("nik"));
+            birthDateColumn.setCellValueFactory(new PropertyValueFactory<User, LocalDate>("birthDate"));
+            addressColumn.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
 
-        birthDateColumn.setCellFactory(myDateTableCell -> {
-            return new TableCell<User, LocalDate>() {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+            birthDateColumn.setCellFactory(myDateTableCell -> new TableCell<User, LocalDate>() {
                 @Override
                 protected void updateItem(LocalDate date, boolean dateIsEmpty) {
                     super.updateItem(date, dateIsEmpty);
@@ -69,31 +74,36 @@ public class Controller implements Initializable {
                         setText(date.format(dateFormatter));
                     }
                 }
-            };
-        });
+            });
 
-        birthDateInput.setConverter(new StringConverter<LocalDate>() {
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) return dateFormatter.format(date);
-                else return "";
-            }
+            birthDateInput.setConverter(new StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    if (date != null) return dateFormatter.format(date);
+                    else return "";
+                }
 
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
-                else return null;
-            }
-        });
+                @Override
+                public LocalDate fromString(String string) {
+                    if (string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
+                    else return null;
+                }
+            });
 
-        tableView.getSelectionModel().selectedItemProperty().addListener(((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                nameInput.setText(newSelection.getName());
-                nikInput.setText(newSelection.getNik());
-                birthDateInput.setValue(newSelection.getBirthDate());
-                addressInput.setText(newSelection.getAddress());
-            }
-        }));
+            tableView.getSelectionModel().selectedItemProperty().addListener(((obs, oldSelection, newSelection) -> {
+                if (newSelection != null) {
+                    nameInput.setText(newSelection.getName());
+                    nikInput.setText(newSelection.getNik());
+                    nikInput.setDisable(true);
+                    birthDateInput.setValue(newSelection.getBirthDate());
+                    addressInput.setText(newSelection.getAddress());
+                } else {
+                    nikInput.setDisable(false);
+                }
+            }));
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Something Wrong", e.getMessage());
+        }
     }
 
     @FXML
@@ -104,38 +114,51 @@ public class Controller implements Initializable {
 
     @FXML
     void submit() {
-        if (checkEmptyFields(false)) {
-            showError(Alert.AlertType.ERROR, "Invalid Entries", "Invalid Entries! Make sure the fields are not empty and valid");
-            return;
+        try {
+            if (checkEmptyFields(false)) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Entries", "Invalid Entries! Make sure the fields are not empty and valid");
+                return;
+            }
+
+            ObservableList<User> users = tableView.getItems();
+            User user = new User(nameInput.getText(),
+                    nikInput.getText(),
+                    birthDateInput.getValue(),
+                    addressInput.getText());
+
+            if (tableView.getSelectionModel().getSelectedIndex() > -1) {
+                User updateUser = database.update(user);
+                if (updateUser == null) return;
+                users.set(tableView.getSelectionModel().getSelectedIndex(), user);
+            } else {
+                User inserUser = database.insert(user);
+                if (inserUser == null) return;
+                users.add(inserUser);
+            }
+
+            tableView.setItems(users);
+            showAlert(Alert.AlertType.INFORMATION, "Insert Successfully", "Data Successfully Inserted");
+            reset();
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Failed to Submit Data", e.getMessage());
         }
-
-        if (tableView.getSelectionModel().getSelectedIndex() > -1) {
-
-        }
-
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
-
-        System.out.println(birthDateInput.getValue().format(dateFormatter));
-
-        User user = new User(nameInput.getText(),
-            nikInput.getText(),
-            birthDateInput.getValue(),
-            addressInput.getText());
-        ObservableList<User> users = tableView.getItems();
-        users.add(user);
-        tableView.setItems(users);
-
-        showError(Alert.AlertType.INFORMATION, "Insert Successfully", "Data Successfully Inserted");
-        reset();
     }
 
     @FXML
     void delete() {
-        int selectedID = tableView.getSelectionModel().getSelectedIndex();
-        User user = tableView.getSelectionModel().getSelectedItem();
-        if (selectedID > -1) {
-            tableView.getItems().remove(selectedID);
-            showError(Alert.AlertType.INFORMATION, "Delete Successfully", "Data Successfully Deleted");
+        try {
+            int selectedID = tableView.getSelectionModel().getSelectedIndex();
+            if (selectedID > -1) {
+                User deleteUser = database.delete(tableView.getSelectionModel().getSelectedItem());
+                if (deleteUser == null) {
+                    return;
+                }
+
+                tableView.getItems().remove(selectedID);
+                showAlert(Alert.AlertType.INFORMATION, "Delete Successfully", "Data Successfully Deleted");
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Failed to Delete Data", e.getMessage());
         }
     }
 
@@ -146,7 +169,6 @@ public class Controller implements Initializable {
 
     @FXML
     void selectPrevious() {
-        System.out.println(tableView.getSelectionModel().getSelectedIndex());
         if (tableView.getSelectionModel().getSelectedIndex() < 0) {
             tableView.getSelectionModel().selectFirst();
         } else {
@@ -154,7 +176,7 @@ public class Controller implements Initializable {
         }
     }
 
-    void showError(Alert.AlertType type, String title, String message) {
+    void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
