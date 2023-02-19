@@ -14,25 +14,29 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.clinicmanagement.Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.clinicmanagement.Controller">
     <children>
-        <TableView fx:id="tableView" layoutX="255.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="247.0" prefWidth="399.0">
+        <Button layoutX="25.0" onAction="#exitApps" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="←  Exit" >
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <TableView fx:id="tableView" layoutX="255.0" layoutY="56.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="247.0" prefWidth="399.0">
             <columns>
-<!--                <TableColumn fx:id="indexColumn" prefWidth="75.0" text="No." />-->
                 <TableColumn fx:id="nameColumn" prefWidth="95.0" text="Nama Pasien" />
                 <TableColumn fx:id="nikColumn" prefWidth="94.66668701171875" text="NIK" />
                 <TableColumn fx:id="birthDateColumn" prefWidth="101.33331298828125" text="Tanggal Lahir" />
                 <TableColumn fx:id="addressColumn" minWidth="3.66668701171875" prefWidth="107.66668701171875" text="Alamat" />
             </columns>
         </TableView>
-      <HBox alignment="TOP_RIGHT" layoutX="255.0" layoutY="289.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="399.0">
+      <HBox alignment="TOP_RIGHT" layoutX="255.0" layoutY="314.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="399.0">
          <children>
              <Button mnemonicParsing="false" onAction="#selectPrevious" prefWidth="100.0" text="▲  Previous">
                  <cursor>
                      <Cursor fx:constant="HAND" />
                  </cursor>
              </Button>
-            <Button layoutX="199.0" onAction="#selectNext" layoutY="10.0" mnemonicParsing="false" prefWidth="100.0" text="▼  Next">
+            <Button layoutX="199.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectNext" prefWidth="100.0" text="▼  Next">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
@@ -50,7 +54,7 @@
             </Button>
          </children>
       </HBox>
-        <VBox layoutX="25.0" layoutY="26.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="273.0" prefWidth="206.0" spacing="5.0">
+        <VBox layoutX="25.0" layoutY="56.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="273.0" prefWidth="206.0" spacing="5.0">
             <children>
                 <Text id="nameLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Nama Pasien" />
                 <TextField id="nameInput" fx:id="nameInput" style="-fx-border-color: transparent;" styleClass="text-field-element" />

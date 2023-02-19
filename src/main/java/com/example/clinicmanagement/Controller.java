@@ -176,6 +176,11 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
+    void exitApps() {
+        System.exit(-1);
+    }
+
     void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -217,4 +222,6 @@ public class Controller implements Initializable {
 
         return isError;
     }
+
+
 }
